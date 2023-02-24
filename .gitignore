@@ -1,0 +1,15 @@
+#  Local .terraform directories
+.terraform/
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfplan files
+*.tfplan
+
+**/.terraform.lock.hcl
+
+# vim
+*.swp
+*.swo
