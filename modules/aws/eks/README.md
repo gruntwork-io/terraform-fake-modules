@@ -16,16 +16,17 @@ To use this module, include it in your main Terraform file.
 
 ```hcl
 module "fake_eks" {
-  source  = "git::https://github.com/yourorg/terraform-fake-eks.git"
-  vpc_id  = "vpc-12345"
-  namespace = "test"
-  environment = "staging"
+  source                 = "git::https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/eks"
+  vpc_id                 = "vpc-12345"
+  namespace              = "gruntwork"
+  environment            = "staging"
   allow_list_cidr_blocks = ["192.0.2.0/24", "198.51.100.0/24"]
   tags = {
-    "Owner" = "Test User"
+    "Owner"   = "Test User"
     "Purpose" = "Module Testing"
   }
 }
+
 ```
 
 ## Inputs
