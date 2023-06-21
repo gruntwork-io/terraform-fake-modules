@@ -1,19 +1,30 @@
+########################################################################
+#                                                                      #
+# 'data' calls to get information on where we're authenticated in AWS. #
+#                                                                      #
+#   e.g., "What region are we in?", "What account are we in?"          #
+#                                                                      #
+########################################################################
+
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
+
+########################################################################
+#                                                                      #
+# 'locals' blocks are where most the action happens to create strings  #
+# that will be used as 'outputs' in your plan and apply that look      #
+# semi-realistic.                                                      #
+#                                                                      #
+########################################################################
 
 locals {
   aws_region_shortname = replace(data.aws_region.current.name, "/(\\w\\w).*-(\\w).*-(\\d).*$/", "$1$2$3")
   aws_account_id       = data.aws_caller_identity.current.account_id
 
+  # This generates a random value that will change when any of these other variables will change.
+  # Trying playing with the sha256 function in the `terraform console`.
   string_used_for_fake_ids = sha256(join("", [var.namespace, var.environment, local.aws_region_shortname, var.vpc_id]))
-
-  eks_api_server_endpoint = join(".", [
-    "https://${upper(substr(local.string_used_for_fake_ids, 0, 32))}",
-    lower(substr(local.string_used_for_fake_ids, 33, 3)),
-    data.aws_region.current.name,
-    "eks.amazonaws.com"
-  ])
 
   eks_cluster_name = join("-", [var.namespace, var.environment, local.aws_region_shortname, "eks"])
 
@@ -23,7 +34,37 @@ locals {
     local.aws_account_id,
     "cluster/${local.eks_cluster_name}"
   ])
+
+  ########################################################################
+  //                                                                    \\
+  // Generate a realistic looking EKS endpoint that would be used for   \\
+  // authenticating to the Kubernetes API for actions like Helm chart   \\
+  // deployments and on-cluster debugging.                              \\
+  //                                                                    \\
+  ########################################################################
+
+  eks_api_server_endpoint = join(".", [
+    "https://${upper(substr(local.string_used_for_fake_ids, 0, 32))}",
+    lower(substr(local.string_used_for_fake_ids, 33, 3)),
+    data.aws_region.current.name,
+    "eks.amazonaws.com"
+  ])
 }
+
+########################################################################
+#                                                                      #
+# 'null_resource's are a tricky topic to understand that can be very   #
+# powerful but should be used rarely in production. The `triggers`     #
+# block is there to destroy this resource when values change to mimic  #
+# AWS behavior.                                                        #
+#                                                                      #
+#   e.g., if the AWS region changes, we will destroy the EKS cluster,  #
+#   and "recreate" the EKS cluster in the new region.                  #
+#                                                                      #
+#  See this line below which causes this behavior:                     #
+#   'destroy_eks_if_region_changed = data.aws_region.current.name'     #
+#                                                                      #
+########################################################################
 
 resource "null_resource" "eks_cluster" {
   triggers = {
@@ -32,11 +73,3 @@ resource "null_resource" "eks_cluster" {
     destroy_eks_if_vpc_changed    = var.vpc_id
   }
 }
-
-#resource "null_resource" "v2_resource" {
-#  triggers = {
-#    destroy_eks_if_region_changed = data.aws_region.current.name
-#    destroy_eks_if_name_changed   = local.eks_cluster_name
-#    destroy_eks_if_vpc_changed    = var.vpc_id
-#  }
-#}
