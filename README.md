@@ -5,6 +5,7 @@ This repository contains a collection of "fake" Terraform modules designed to mi
 ## Prerequisites
 
 - Terraform v1.0.0 or newer
+- AWS Provider version 4.0 or newer
 - Terragrunt v0.31.0 or newer (Optional)
 - Git
 
@@ -48,6 +49,43 @@ inputs = {}
 ## What to Expect
 
 These modules do not create any real cloud resources. They simulate the process and generate fake outputs. You can use them to learn and understand how to structure Terraform modules, manage module dependencies, and study how Terragrunt simplifies working with Terraform modules.
+
+Here is the output from the `examples/vpc-aurora-eks` example module:
+
+```
+Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+aurora = {
+  "arn" = "arn:aws:rds:eu-west-1:012345678901:cluster:fake-module-development-euw1-aurora-postgres"
+  "engine" = {
+    "name" = "postgres"
+    "version" = "13.6"
+  }
+  "name" = "fake-module-development-euw1-aurora-postgres"
+  "port" = "5432"
+  "reader_endpoint" = "fake-module-development-euw1-aurora-postgres.cluster-ro-5b07ca0def49.eu-west-1.rds.amazonaws.com"
+  "writer_endpoint" = "fake-module-development-euw1-aurora-postgres.cluster-5b07ca0def49.eu-west-1.rds.amazonaws.com"
+}
+eks = {
+  "api_server_endpoint" = "https://5B07CA0DEF491592E25413C44895381E.8f2.eu-west-1.eks.amazonaws.com"
+  "arn" = "arn:aws:eks:eu-west-1:012345678901:cluster/fake-module-development-euw1-eks"
+  "name" = "fake-module-development-euw1-eks"
+}
+vpc = {
+  "id" = "vpc-4d23c34"
+  "name" = "fake-module-development-euw1-vpc"
+  "subnet_cidr_blocks" = {
+    "fake-module-development-euw1-private-subnet-1" = "10.222.0.0/21"
+    "fake-module-development-euw1-public-subnet-2" = "10.222.8.0/21"
+  }
+  "subnet_names" = {
+    "subnet-757c89b" = "fake-module-development-euw1-public-subnet-2"
+    "subnet-8757c89" = "fake-module-development-euw1-private-subnet-1"
+  }
+}
+```
 
 ## Contributing
 
