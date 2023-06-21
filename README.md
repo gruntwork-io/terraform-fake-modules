@@ -1,6 +1,6 @@
 # Terraform Fake Modules
 
-This repository contains a collection of "fake" Terraform modules designed to mimic AWS and GCP resources. The main purpose of these modules is to facilitate the exploration of Terraform and Terragrunt behavior without the need to invest time or money in real infrastructure. Each module authenticates with the respective cloud service and generates semi-realistic output values.
+This repository contains a collection of "fake" Terraform modules designed to mimic AWS and GCP resources. The main purpose of these modules is to facilitate the exploration of Terraform and Terragrunt behavior without the need to invest time or money in real infrastructure. Each module authenticates with the respective cloud service and generates semi-realistic output values. It is currently maintained by members of the [Gruntwork](https://gruntwork.io/) sales team. 
 
 ## Prerequisites
 
@@ -71,26 +71,4 @@ aurora = {
 eks = {
   "api_server_endpoint" = "https://5B07CA0DEF491592E25413C44895381E.8f2.eu-west-1.eks.amazonaws.com"
   "arn" = "arn:aws:eks:eu-west-1:012345678901:cluster/fake-module-development-euw1-eks"
-  "name" = "fake-module-development-euw1-eks"
-}
-vpc = {
-  "id" = "vpc-4d23c34"
-  "name" = "fake-module-development-euw1-vpc"
-  "subnet_cidr_blocks" = {
-    "fake-module-development-euw1-private-subnet-1" = "10.222.0.0/21"
-    "fake-module-development-euw1-public-subnet-2" = "10.222.8.0/21"
-  }
-  "subnet_names" = {
-    "subnet-757c89b" = "fake-module-development-euw1-public-subnet-2"
-    "subnet-8757c89" = "fake-module-development-euw1-private-subnet-1"
-  }
-}
-```
-
-## Contributing
-
-Contributions to this project are welcome! Please submit a pull request or create an issue to propose changes or additions.
-
-## License
-
-This project is licensed under the terms of the Apache-2.0 license.
+  "name" = "fake-module-development
