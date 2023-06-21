@@ -10,6 +10,10 @@
 
 **/.terraform.lock.hcl
 
-# vim
+# terragrunt-cache
+**/.terragrunt-cache/*
+
+# IDEs
 *.swp
 *.swo
+.idea/*
