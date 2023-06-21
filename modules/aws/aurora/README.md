@@ -8,7 +8,7 @@ This module generates semi-realistic Aurora endpoints for both writer and reader
 
 - Terraform v1.0.0 or newer
 - An AWS account and valid AWS Credentials
-- A correctly configured AWS Provider
+- AWS Provider version 4.0 or newer
 
 ## Usage
 
@@ -17,7 +17,13 @@ Include this module in your main Terraform file as follows:
 ```hcl
 module "fake_aurora" {
   source  = "git::https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/aurora"
-  region  = "us-west-2"
+  vpc_id                 = "vpc-12345"
+  namespace              = "gruntwork"
+  environment            = "staging"
+  tags = {
+    "Owner"   = "Test User"
+    "Purpose" = "Module Testing"
+  }
 }
 ```
 
