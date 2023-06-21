@@ -12,7 +12,6 @@ variable "environment" {
   default = "development"
 }
 
-
 variable "engine_name" {
   type    = string
   default = "postgres"
