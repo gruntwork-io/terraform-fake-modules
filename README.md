@@ -18,9 +18,21 @@ For the compatibility between Terraform and Terragrunt versions, please refer to
 To quickly get started with a fake AWS VPC, use the following code:
 
 ```hcl
-module "vpc" {
-  source = "https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/vpc?ref=main"
+terraform {
+  required_version = ">= 1.1.6"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
 }
+
+module "vpc" {
+  source = "git::https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/vpc?ref=main"
+}
+
 ```
 
 ### AWS Elastic Kubernetes Service (EKS)
@@ -29,9 +41,15 @@ To add a fake AWS EKS cluster, you can use the following code. This also uses th
 
 ```hcl
 module "eks" {
-  source = "https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/eks?ref=main"
+  source = "git::https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/eks?ref=main"
   vpc_id = module.vpc.id
 }
+```
+
+### Running the example
+
+```bash
+aws-vault exec iangrunt-sandbox -- terraform init && terraform apply
 ```
 
 ### Terragrunt
@@ -40,7 +58,7 @@ To use these modules with Terragrunt, you need to define the `terraform` block i
 
 ```hcl
 terraform {
-  source = "https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/vpc?ref=main"
+  source = "git::https://github.com/gruntwork-io/terraform-fake-modules.git//modules/aws/vpc?ref=main"
 }
 
 inputs = {}
