@@ -27,7 +27,7 @@ locals {
 
   # This generates a random value that will change when any of these other variables will change.
   # Trying playing with the sha256 function in the `terraform console`.
-  string_used_for_fake_ids = sha256(join("", [local.namespace, local.environment, local.aws_region_shortname, local.vpc_id]))
+  string_used_for_fake_ids = sha256(join("", [local.namespace, local.environment, local.aws_region_shortname, var.vpc_id]))
 
   aurora_cluster_name = join("-", [local.namespace, local.environment, local.aws_region_shortname, "aurora", var.engine_name])
 
