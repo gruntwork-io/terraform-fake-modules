@@ -7,8 +7,8 @@
 ########################################################################
 
 data "aws_region" "current" {}
-
 data "aws_caller_identity" "current" {}
+data "aws_default_tags" "these" {}
 
 ########################################################################
 #                                                                      #
@@ -22,11 +22,14 @@ locals {
   aws_region_shortname = replace(data.aws_region.current.name, "/(\\w\\w).*-(\\w).*-(\\d).*$/", "$1$2$3")
   aws_account_id       = data.aws_caller_identity.current.account_id
 
+  namespace   = try(data.aws_default_tags.these.tags["Namespace"], var.namespace)
+  environment = try(data.aws_default_tags.these.tags["Namespace"], var.environment)
+
   # This generates a random value that will change when any of these other variables will change.
   # Trying playing with the sha256 function in the `terraform console`.
-  string_used_for_fake_ids = sha256(join("", [var.namespace, var.environment, local.aws_region_shortname, var.vpc_id]))
+  string_used_for_fake_ids = sha256(join("", [local.namespace, local.environment, local.aws_region_shortname, local.vpc_id]))
 
-  eks_cluster_name = join("-", [var.namespace, var.environment, local.aws_region_shortname, "eks"])
+  eks_cluster_name = join("-", [local.namespace, local.environment, local.aws_region_shortname, "eks"])
 
   eks_cluster_arn = join(":", [
     "arn:aws:eks",
@@ -49,6 +52,8 @@ locals {
     data.aws_region.current.name,
     "eks.amazonaws.com"
   ])
+
+  tags = merge(var.tags, data.aws_default_tags.these.tags)
 }
 
 ########################################################################

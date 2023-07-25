@@ -51,5 +51,5 @@ output "port" {
 }
 
 output "tags" {
-  value = var.tags
+  value = local.tags
 }

@@ -8,6 +8,7 @@
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+data "aws_default_tags" "these" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -25,11 +26,14 @@ locals {
   aws_region_shortname = replace(data.aws_region.current.name, "/(\\w\\w).*-(\\w).*-(\\d).*$/", "$1$2$3")
   aws_account_id       = data.aws_caller_identity.current.account_id
 
+  namespace   = try(data.aws_default_tags.these.tags["Namespace"], var.namespace)
+  environment = try(data.aws_default_tags.these.tags["Namespace"], var.environment)
+
   # This generates a random value that will change when any of these other variables will change.
   # Trying playing with the sha256 function in the `terraform console`.
-  string_used_for_fake_ids = sha256(join("", [var.namespace, var.environment, local.aws_region_shortname, var.cidr_block, local.available_az_count]))
+  string_used_for_fake_ids = sha256(join("", [local.namespace, local.environment, local.aws_region_shortname, var.cidr_block, local.available_az_count]))
 
-  vpc_name = join("-", [var.namespace, var.environment, local.aws_region_shortname, "vpc"])
+  vpc_name = join("-", [local.namespace, local.environment, local.aws_region_shortname, "vpc"])
   vpc_id   = join("-", ["vpc", substr(local.string_used_for_fake_ids, 0, 7)])
 
   available_az_count = length(data.aws_availability_zones.available.names)
@@ -48,8 +52,8 @@ locals {
   subnet_names = { for k in range(length(local.subnet_ids)) :
     local.subnet_ids[k] => join("-",
       [
-        var.namespace,
-        var.environment,
+        local.namespace,
+        local.environment,
         local.aws_region_shortname,
         (contains(split("", tostring(k / 2)), ".") ? "public" : "private"),
         "subnet",
@@ -66,7 +70,7 @@ locals {
     local.subnet_ids[m] => cidrsubnet(var.cidr_block, local.az_count, m)
   }
 
-  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags)
+  tags = merge(var.tags, data.aws_default_tags.these.tags)
 }
 
 ########################################################################
