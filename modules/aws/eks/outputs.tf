@@ -26,14 +26,6 @@ output "aws_region_shortname" {
   value = local.aws_region_shortname
 }
 
-output "environment" {
-  value = var.environment
-}
-
-output "namespace" {
-  value = var.namespace
-}
-
 output "vpc_id" {
   value = var.vpc_id
 }
