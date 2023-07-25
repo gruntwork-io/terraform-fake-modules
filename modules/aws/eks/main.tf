@@ -53,7 +53,7 @@ locals {
     "eks.amazonaws.com"
   ])
 
-  tags = merge({ namespace = local.namespace, environment = local.environment }, local.tags, data.aws_default_tags.these.tags)
+  tags = merge(var.tags, data.aws_default_tags.these.tags)
 }
 
 ########################################################################
