@@ -67,7 +67,7 @@ locals {
     local.subnet_ids[m] => cidrsubnet(var.cidr_block, local.az_count, m)
   }
 
-  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags, aws_default_tags.these.tags)
+  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags, data.aws_default_tags.these.tags)
 }
 
 ########################################################################
