@@ -7,8 +7,8 @@
 ########################################################################
 
 data "aws_region" "current" {}
-
 data "aws_caller_identity" "current" {}
+data "aws_default_tags" "these" {}
 
 ########################################################################
 #                                                                      #
@@ -49,6 +49,8 @@ locals {
     data.aws_region.current.name,
     "eks.amazonaws.com"
   ])
+
+  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags, aws_default_tags.these.tags)
 }
 
 ########################################################################

@@ -8,6 +8,7 @@
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+data "aws_default_tags" "these" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -66,7 +67,7 @@ locals {
     local.subnet_ids[m] => cidrsubnet(var.cidr_block, local.az_count, m)
   }
 
-  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags)
+  tags = merge({ namespace = var.namespace, environment = var.environment }, var.tags, aws_default_tags.these.tags)
 }
 
 ########################################################################

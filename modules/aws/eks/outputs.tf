@@ -39,5 +39,5 @@ output "vpc_id" {
 }
 
 output "tags" {
-  value = var.tags
+  value = local.tags
 }
