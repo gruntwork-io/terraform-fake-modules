@@ -63,7 +63,7 @@ locals {
     "rds.amazonaws.com"
   ])
 
-  tags = merge(var.tags, data.aws_default_tags.these.tags)
+  tags = merge(data.aws_default_tags.these.tags, var.tags)
 }
 
 ########################################################################
