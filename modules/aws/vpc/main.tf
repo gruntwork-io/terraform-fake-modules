@@ -27,7 +27,7 @@ locals {
   aws_account_id       = data.aws_caller_identity.current.account_id
 
   namespace   = try(data.aws_default_tags.these.tags["Namespace"], var.namespace)
-  environment = try(data.aws_default_tags.these.tags["Namespace"], var.environment)
+  environment = try(data.aws_default_tags.these.tags["Environment"], var.environment)
 
   # This generates a random value that will change when any of these other variables will change.
   # Trying playing with the sha256 function in the `terraform console`.
