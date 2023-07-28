@@ -1,9 +1,25 @@
+terraform {
+  required_version = ">= 1.1.6"
+
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+  }
+}
+
+########################################################################
+#                                                                      #
+# 'data' calls to get information on where we're authenticated in AWS. #
+#                                                                      #
+#   e.g., "What region are we in?", "What account are we in?"          #
+#                                                                      #
+########################################################################
+
 data "google_compute_regions" "available" {}
-
 data "google_project" "this" {}
-
 data "google_client_config" "current" {}
-
 data "google_client_openid_userinfo" "this" {}
 
 locals {
