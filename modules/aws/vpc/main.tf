@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
 ########################################################################
 #                                                                      #
 # 'data' calls to get information on where we're authenticated in AWS. #
